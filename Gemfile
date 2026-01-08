@@ -69,7 +69,7 @@ end
 
 group :test do
   # Matchers for cleaner assertions [https://github.com/thoughtbot/shoulda-matchers]
-  gem "shoulda-matchers", "~> 6.0"
+  gem "shoulda-matchers", "~> 7.0"
 
   # Fake data generation [https://github.com/faker-ruby/faker]
   gem "faker", "~> 3.5"
