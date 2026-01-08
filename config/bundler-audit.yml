@@ -1,0 +1,10 @@
+# Bundler Audit Configuration
+# Scans Gemfile.lock for gems with known security vulnerabilities (CVEs)
+# https://github.com/rubysec/bundler-audit
+
+# Ignore specific CVEs that don't apply to this application
+# IMPORTANT: Always document WHY you're ignoring a CVE
+ignore:
+  []
+  # Example (DO NOT USE without proper justification):
+  # - CVE-2023-12345  # Affects Windows only, we deploy on Linux

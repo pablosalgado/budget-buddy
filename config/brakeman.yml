@@ -1,0 +1,48 @@
+# Brakeman Security Scanner Configuration
+# https://brakemanscanner.org/docs/options/
+
+# Ignore warnings with specific fingerprints
+# Add fingerprints from brakeman output when you need to ignore false positives
+# Always document WHY you're ignoring a warning
+ignored_warnings: []
+
+# Example of ignoring a specific warning (DO NOT USE without justification):
+# - warning_type: "SQL Injection"
+#   fingerprint: "abc123def456..."
+#   note: "False positive - input is validated by X before reaching this code"
+
+# Check all files, including those in vendor (if needed)
+skip_files: []
+
+# Exclude specific paths from scanning
+exclude_paths:
+  - node_modules/**/*
+  - tmp/**/*
+  - log/**/*
+  - public/**/*
+  - vendor/bundle/**/*
+
+# Minimum confidence level to report (High, Medium, Weak)
+# High = fewer false positives, might miss some issues
+# Weak = more thorough, more false positives
+min_confidence: 2  # Medium confidence
+
+# Output format (text, json, html, csv, tabs, markdown)
+output_format: text
+
+# Return non-zero exit code if warnings found
+# This makes CI fail when vulnerabilities are detected
+exit_on_warn: true
+
+# Return non-zero exit code if errors occurred during scan
+exit_on_error: true
+
+# Show full stack traces for internal errors (debugging)
+debug: false
+
+# Check for security updates to Brakeman
+ensure_latest: true
+
+# Additional checks (experimental features)
+interprocedural: false
+
