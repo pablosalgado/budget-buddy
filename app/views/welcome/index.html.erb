@@ -8,10 +8,10 @@
   <p>A YNAB (You Need A Budget) clone built with Ruby on Rails.</p>
   
   <% if authenticated? %>
-    <p>You are signed in!</p>
+    <p>You are signed in as <%= Current.user.email_address %>!</p>
     <%= button_to "Sign out", session_path, method: :delete %>
   <% else %>
-    <p><%= link_to "Sign in", new_session_path %></p>
+    <p><%= link_to "Sign in", new_session_path %> or <%= link_to "Sign up", new_registration_path %></p>
   <% end %>
 </body>
 </html>
