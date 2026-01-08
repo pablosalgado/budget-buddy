@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
+  # Authentication routes
   resource :session
   resources :passwords, param: :token
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # API routes (versioned)
@@ -24,5 +26,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "welcome#index"
 end

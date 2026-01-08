@@ -17,6 +17,11 @@ This is a bare-bones project in early development. It's designed to replicate ba
 - [Testing](#testing)
   - [Running Tests](#running-tests)
   - [Useful Options](#useful-options)
+- [Authentication](#authentication)
+  - [User Registration](#user-registration)
+  - [Signing In](#signing-in)
+  - [Password Reset](#password-reset)
+  - [Password Requirements](#password-requirements)
 - [Development](#development)
   - [Development Guidelines](#development-guidelines)
   - [Environment Variables](#environment-variables)
@@ -195,6 +200,137 @@ COVERAGE=true bin/rspec
 ```
 
 > **For comprehensive testing patterns and best practices**, see [RSpec Instructions](/.github/instructions/rspec.instructions.md)
+
+## Authentication
+
+Budget Buddy includes built-in user authentication powered by Rails 8's authentication generator with enhanced security features.
+
+### Features
+
+- **User Registration**: Create new accounts with email and password
+- **Secure Login**: Session-based authentication with secure cookies
+- **Password Reset**: Self-service password recovery via email
+- **Session Management**: Track user sessions with IP and user agent
+- **Strong Password Requirements**: Enforced password complexity rules
+
+### User Registration
+
+Users can register by providing:
+- Email address (must be valid and unique)
+- Password (must meet security requirements)
+
+### Signing In
+
+Sign in with your email address and password at `/session/new`.
+
+After successful authentication:
+- A secure session cookie is created (httponly, same_site: lax)
+- User sessions are tracked with IP address and user agent
+- Rate limiting protects against brute force attacks (10 attempts per 3 minutes)
+
+### Signing Out
+
+Sign out at any time by clicking "Sign out" or visiting `DELETE /session`.
+
+This will:
+- Destroy the current session
+- Clear the session cookie
+- Redirect to the sign-in page
+
+### Password Reset
+
+If you forget your password:
+
+1. Visit `/passwords/new`
+2. Enter your email address
+3. Check your email for password reset instructions
+4. Click the link in the email (valid for 24 hours)
+5. Enter and confirm your new password
+6. All existing sessions will be destroyed for security
+
+**Security note**: The system shows the same success message whether the email exists or not, preventing email enumeration attacks.
+
+### Password Requirements
+
+Passwords must meet these requirements:
+- **Minimum length**: 8 characters
+- **Complexity**: Must include:
+  - At least one lowercase letter (a-z)
+  - At least one uppercase letter (A-Z)
+  - At least one digit (0-9)
+
+Example valid passwords:
+- `Password123`
+- `MySecure1Pass`
+- `Budget2024!`
+
+### Authentication in Controllers
+
+Controllers require authentication by default. To allow unauthenticated access:
+
+```ruby
+class PublicController < ApplicationController
+  allow_unauthenticated_access
+  
+  def index
+    # This action does not require authentication
+  end
+end
+```
+
+To require authentication for specific actions only:
+
+```ruby
+class MixedController < ApplicationController
+  allow_unauthenticated_access only: [:index, :show]
+  
+  def index
+    # Public action
+  end
+  
+  def edit
+    # Requires authentication
+  end
+end
+```
+
+### Authentication Helpers
+
+Available in controllers and views:
+
+```ruby
+authenticated?           # Returns true if user is signed in
+Current.user            # Returns the current user (or nil)
+start_new_session_for(user)  # Create a new session for a user
+terminate_session       # End the current session
+```
+
+### Security Features
+
+- **CSRF Protection**: Enabled by default for all non-API requests
+- **Rate Limiting**: Protects sign-in and password reset from abuse
+- **Secure Sessions**: httponly cookies, same_site protection
+- **Bcrypt Hashing**: Passwords are hashed with bcrypt (cost factor 12)
+- **Password Reset Tokens**: Signed tokens with 24-hour expiration
+- **Session Tracking**: IP address and user agent logged for security audit
+
+### Testing Authentication
+
+```ruby
+# In request specs
+let(:user) { create(:user, password: 'Password123') }
+
+# Sign in a user
+post session_path, params: {
+  email_address: user.email_address,
+  password: 'Password123'
+}
+
+# Check if signed in
+expect(cookies.signed[:session_id]).to be_present
+```
+
+For more authentication examples, see the specs in `spec/requests/sessions_spec.rb` and `spec/requests/passwords_spec.rb`.
 
 ## Development
 
