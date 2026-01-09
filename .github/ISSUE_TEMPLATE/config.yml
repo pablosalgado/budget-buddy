@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 README
+    url: https://github.com/pablosalgado/budget-buddy/blob/main/README.md
+    about: Project documentation
+  - name: 📋 Guidelines
+    url: https://github.com/pablosalgado/budget-buddy/tree/main/.github/instructions
+    about: Coding standards
