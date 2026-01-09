@@ -74,10 +74,10 @@ end
 
 ```ruby
 # ❌ BAD - N+1 in views
-@posts.each do |post|
+<% @posts.each do |post| %>
   <%= post.author.name %>  # N+1 if not preloaded
   <%= post.comments.count %> # N+1 if not preloaded
-end
+<% end %>
 
 # ✅ GOOD - Preload in controller
 @posts = Post.includes(:author).with_attached_comments_count
@@ -87,14 +87,14 @@ end
 ```ruby
 # ❌ BAD - Foreign keys without indexes
 create_table :posts do |t|
-  t.references :user, null: false  # Missing index!
+  t.references :user, null: false, foreign_key: true, index: false  # Missing index!
   t.string :status
   t.timestamps
 end
 
 # ✅ GOOD - Proper indexes
 create_table :posts do |t|
-  t.references :user, null: false, foreign_key: true, index: true
+  t.references :user, null: false, foreign_key: true # Index is created by default
   t.string :status
   t.timestamps
   
@@ -196,7 +196,7 @@ end
 
 # ✅ GOOD - Single responsibility, small methods
 def process_order
-  validate_order!
+  validate_order
   calculate_total
   charge_payment
   send_confirmation
