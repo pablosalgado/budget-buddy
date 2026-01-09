@@ -5,7 +5,7 @@ title: 'docs: '
 labels: documentation
 assignees: pablosalgado
 ---
-## What Docs
+## Documentation Needed
 What needs documenting.
 ## Why
 Why this documentation is needed.
